@@ -109,7 +109,6 @@ defmodule Surface do
     indentation = meta[:indentation] || 0
     column = meta[:column] || 1
 
-    debug_annotations? = Module.get_attribute(__CALLER__.module, :__debug_annotations__)
     component_type = Module.get_attribute(__CALLER__.module, :component_type)
 
     string
@@ -122,8 +121,7 @@ defmodule Surface do
       debug: Enum.member?(opts, ?d),
       file: __CALLER__.file,
       line: line,
-      caller: __CALLER__,
-      annotate_content: debug_annotations? && (&Phoenix.LiveView.HTMLEngine.annotate_tagged_content/1)
+      caller: __CALLER__
     )
   end
 
@@ -174,19 +172,11 @@ defmodule Surface do
 
   @doc false
   def __compile_sface__(name, file, env) do
-    debug_annotations? =
-      Module.get_attribute(
-        env.module,
-        :__debug_annotations__,
-        Application.get_env(:phoenix_live_view, :debug_heex_annotations, false)
-      )
-
     file
     |> File.read!()
     |> Surface.Compiler.compile(1, env, file)
     |> Surface.Compiler.to_live_struct(
-      caller: %Macro.Env{env | file: file, line: 1, function: {String.to_atom(name), 1}},
-      annotate_content: debug_annotations? && (&Phoenix.LiveView.HTMLEngine.annotate_tagged_content/1)
+      caller: %Macro.Env{env | file: file, line: 1, function: {String.to_atom(name), 1}}
     )
   end
 
