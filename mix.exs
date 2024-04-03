@@ -1,3 +1,5 @@
+Code.compile_file("blend/premix.exs")
+
 defmodule Surface.MixProject do
   use Mix.Project
 
@@ -17,6 +19,7 @@ defmodule Surface.MixProject do
       docs: docs(),
       package: package()
     ]
+    |> Keyword.merge(maybe_lockfile_option())
   end
 
   # Run "mix help compile.app" to learn about applications.
@@ -80,5 +83,13 @@ defmodule Surface.MixProject do
 
   defp catalogues do
     ["priv/catalogue"]
+  end
+
+  def maybe_lockfile_option do
+    case System.get_env("MIX_LOCKFILE") do
+      nil -> []
+      "" -> []
+      lockfile -> [lockfile: lockfile]
+    end
   end
 end

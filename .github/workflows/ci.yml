@@ -43,15 +43,13 @@ jobs:
             run_plugin_tests: true
     env:
       MIX_ENV: test
+      BLEND: ${{ matrix.blend }}
     steps:
       - uses: actions/checkout@v4
       - uses: erlef/setup-beam@v1
         with:
           otp-version: ${{matrix.otp}}
           elixir-version: ${{matrix.elixir}}
-      - name: Set lock file from blend
-        if: matrix.blend
-        run: cp blend/${{matrix.blend}}.mix.lock mix.lock
       - name: Update deps
         if: matrix.update_deps
         run: mix deps.update --all
@@ -62,7 +60,9 @@ jobs:
           path: |
               deps
               _build
-          key: ${{ runner.os }}-${{ runner.arch }}-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles('mix.lock') }}
+              blend/deps
+              blend/_build
+          key: ${{ runner.os }}-${{ runner.arch }}-${{ matrix.otp }}-${{ matrix.elixir }}-${{ matrix.blend }}-${{ hashFiles('mix.lock', 'blend/*.mix.lock') }}
       - name: Install Dependencies
         if: steps.deps-cache.outputs.cache-hit != 'true'
         run: |
