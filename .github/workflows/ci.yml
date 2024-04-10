@@ -6,7 +6,7 @@ on:
 
 jobs:
   mix_test:
-    name: mix test (${{matrix.elixir}}/${{matrix.otp}}${{ matrix.old_deps && ', old_deps' }}${{ matrix.update_deps && ', update_deps' }}${{ matrix.warnings_as_errors && ', warnings_as_errors' }}${{ matrix.run_plugin_tests && ', plugin_tests' }}${{ matrix.run_integration_tests && ', integration_tests' }})
+    name: mix test (${{matrix.elixir}}/${{matrix.otp}}${{ matrix.old_deps && ', old_deps' }}${{ matrix.update_deps && ', update_deps' }}${{ matrix.warnings_as_errors && ', warnings_as_errors' }}${{ matrix.run_plugin_tests && ', run_plugin_tests' }}${{ matrix.run_integration_tests && ', run_integration_tests' }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
